@@ -1,0 +1,35 @@
+---
+// src/layouts/BlogPost.astro
+import BaseLayout from './BaseLayout.astro';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+
+interface Props {
+  title: string;
+  publishDate: Date;
+  description: string;
+  lang?: 'en' | 'es';
+}
+
+const { title, publishDate, description, lang = 'en' } = Astro.props;
+
+const formattedDate = format(
+  publishDate,
+  'MMMM d, yyyy',
+  { locale: lang === 'es' ? es : undefined }
+);
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="max-w-3xl mx-auto">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold mb-2">{title}</h1>
+      <time datetime={publishDate.toISOString()} class="text-gray-600 dark:text-gray-400">
+        {formattedDate}
+      </time>
+    </header>
+    <div class="prose dark:prose-invert max-w-none">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
